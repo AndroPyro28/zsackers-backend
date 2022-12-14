@@ -69,6 +69,7 @@ export class OrderService {
   }
 
   async pos(createOrderDto: CreateOrderWalkinDto, userId: number) {
+    console.log(createOrderDto, userId)
     const newOrderDetails = await this.orderDetailsModel.createOrderWalkin(createOrderDto, userId)
 
     const {cartProducts} = createOrderDto;
@@ -81,7 +82,7 @@ export class OrderService {
 
     const updateProducts = await this.productModel.updateProductsStocks(productIds)
 
-    const updateCartProducts = await this.cartProductModel.updateManyCartProductsWithOrder(cartProductIds, newOrderDetails.id)
+    const updateCartProducts = await this.cartProductModel.updateManyCartProductsWithOrder(cartProductIds, newOrderDetails?.id)
     return {
       success: true
     }
