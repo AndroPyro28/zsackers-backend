@@ -67,6 +67,8 @@ export class OrderService {
       });
     }
   }
+
+  
   async pos(createOrderDto: CreateOrderWalkinDto, userId: number) {
     console.log(createOrderDto, userId)
     const newOrderDetails = await this.orderDetailsModel.createOrderWalkin(createOrderDto, userId)
