@@ -11,7 +11,7 @@ export class CartProductController {
     constructor(private readonly cartProduct: CartProductService) {}
 
     @Post()
-    @Roles(['CUSTOMER', 'STAFF'])
+    @Roles(['CUSTOMER', 'STAFF', 'ADMIN'])
     @HttpCode(HttpStatus.CREATED)
     async addToCart(
         @Body('productId', ParseIntPipe) productId: number,
@@ -21,14 +21,14 @@ export class CartProductController {
     }
 
     @Get()
-    @Roles(['CUSTOMER', 'STAFF'])
+    @Roles(['CUSTOMER', 'STAFF', 'ADMIN'])
     @HttpCode(HttpStatus.OK)
     async getCartProducts(@GetCurrentUser('id') userId: number) {
         return this.cartProduct.getCartProducts(userId);
     }
 
     @Patch(':id')
-    @Roles(['CUSTOMER', 'STAFF'])
+    @Roles(['CUSTOMER', 'STAFF', 'ADMIN'])
     @HttpCode(HttpStatus.OK)
     async updateCartQuantity(
             @GetCurrentUser('id', ParseIntPipe) userId: number,
@@ -39,7 +39,7 @@ export class CartProductController {
     }
 
     @Delete(':id')
-    @Roles(['CUSTOMER', 'STAFF'])
+    @Roles(['CUSTOMER', 'STAFF', 'ADMIN'])
     @HttpCode(HttpStatus.OK)
     async deleteOneCartProduct(
         @Param('id', ParseIntPipe) cartProductId: number,
