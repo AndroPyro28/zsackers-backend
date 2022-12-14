@@ -1,5 +1,6 @@
 import { Body, Controller, HttpCode, Post, HttpStatus, Get } from '@nestjs/common';
-import { GetCurrentUser, Public } from 'src/common/decorators';
+import { GetCurrentUser } from 'src/common/decorators/get-current-user.decorator';
+import { Public } from 'src/common/decorators/public.decorator';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import UserInteface from 'src/models/user.model';
 import { AuthService } from './auth.service';

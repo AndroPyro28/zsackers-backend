@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
-import { GetCurrentUser, Roles } from 'src/common/decorators';
+import { GetCurrentUser } from 'src/common/decorators/get-current-user.decorator';
 import { CartProductService } from './cart-product.service';
-
+import { Roles } from 'src/common/decorators/roles.decorator';
 @Controller('cart-products')
 export class CartProductController {
 

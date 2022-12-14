@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
-import { Public, Roles } from 'src/common/decorators';
+import { Public } from 'src/common/decorators/public.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto';
 
