@@ -32,7 +32,7 @@ export class OrderDetails {
     const { totalAmount, order_id} = createOrder;
     const newOrder = await order_Details.create({
       data: {
-        totalAmount,
+        totalAmount:Number(totalAmount),
         order_id,
         transaction_type:'WALK_IN',
         userId: userId,
