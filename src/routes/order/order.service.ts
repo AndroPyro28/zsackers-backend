@@ -21,11 +21,12 @@ export class OrderService {
   
   async checkout(createOrderDto: CreateOrderDto,currentUser: UserInteface, res: Response) {
     const { paymentType, cartProducts, address, contact, totalAmount} = createOrderDto;
-
+    const total_amount = Math.round(totalAmount * 0.1 + totalAmount)
     const returnJson: any = {
       proceedPayment: true,
       paymentType,
       cartProducts,
+      totalAmount:total_amount,
       checkouturl: '',
       address,
       contact,
@@ -39,7 +40,7 @@ export class OrderService {
         url: 'https://g.payx.ph/payment_request',
         formData: {
           'x-public-key': process.env.GCASH_API_KEY,
-          amount: `${totalAmount}`,
+          amount: `${total_amount}`,
           description: 'Payment for services rendered',
           redirectsuccessurl: `${process.env.CLIENT_URL}/customer/payment`,
           // redirectfailurl: `${process.env.CLIENT_URL_PROD}/customer/cart`,
@@ -69,7 +70,6 @@ export class OrderService {
   }
   
   async pos(createOrderDto: CreateOrderWalkinDto, userId: number) {
-    console.log(createOrderDto, userId)
     const newOrderDetails = await this.orderDetailsModel.createOrderWalkin(createOrderDto, userId)
 
     const {cartProducts} = createOrderDto;

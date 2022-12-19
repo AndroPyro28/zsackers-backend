@@ -102,24 +102,31 @@ export class OrderDetails {
 
   async findAllCompletedAndCancelledOrders(filterDateFrom: string, filterDateTo: string,) {
     try {
+
+      console.log(filterDateFrom,
+        filterDateTo);
       const orders = await order_Details.findMany({
         where: {
-          OR: [
-            {
-              order_status: 'cancelled',
-              createdAt: {
-                gte:new Date(filterDateFrom),
-                lte: new Date(filterDateTo)
-              }
-            },
-            {
-              order_status: 'completed',
-              createdAt: {
-                gte:new Date(filterDateFrom),
-                lte: new Date(filterDateTo)
-              }
-            }
-          ]
+          // OR: [
+          //   {
+          //     order_status: 'cancelled',
+          //     createdAt: {
+          //       gte:new Date(filterDateFrom + ''),
+          //       lte: new Date(filterDateTo + '')
+          //     }
+          //   },
+          //   {
+          //     order_status: 'completed',
+          //     createdAt: {
+          //       gte:new Date(filterDateFrom + ''),
+          //       lte: new Date(filterDateTo + '')
+          //     }
+          //   }
+          // ]
+          createdAt: {
+                  gte:new Date(filterDateFrom + ''),
+                  lte: new Date(filterDateTo + '')
+                }
         },
         include: {
           user: {
@@ -137,7 +144,7 @@ export class OrderDetails {
       });
       return orders
     } catch (error) {
-      console.error(error)
+      console.error('errorrrr')
     }
   }
 
