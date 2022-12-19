@@ -67,7 +67,6 @@ export class OrderService {
       });
     }
   }
-
   
   async pos(createOrderDto: CreateOrderWalkinDto, userId: number) {
     console.log(createOrderDto, userId)

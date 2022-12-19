@@ -1,4 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { RandomGenerator } from 'src/common/helpers';
 import { ArgonHelper } from 'src/common/helpers/argon.helper';
 import { sendEmailModel, SMTP } from 'src/common/utils';
 import { Profile, Staff, User } from 'src/models';
@@ -16,12 +17,12 @@ export class StaffService {
     private readonly Smtp: SMTP,
     private readonly staffModel: Staff,
     private readonly profileModel: Profile,
+    private readonly randomGenerator: RandomGenerator
   ) {}
 
   async create(createStaffDto: CreateStaffDto) {
-    const password = 'test123';
+    const password = this.randomGenerator.generateRandomChars(10);
     const hashPw = await this.argonHelper.hash(password);
-
     const newUser = await this.userModel.createUser({
       ...createStaffDto,
       password: hashPw,
