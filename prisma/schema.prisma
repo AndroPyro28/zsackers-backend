@@ -14,10 +14,12 @@ enum ROLE {
   CUSTOMER
   STAFF
 }
+
 enum statuses {
   ACTIVE
   INACTIVE
 }
+
 model User {
   id                Int             @id @default(autoincrement())
   createdAt         DateTime        @default(now())
@@ -31,7 +33,6 @@ model User {
   order_details     Order_Details[]
   Cart_Product      Cart_Product[]
   status            statuses        @default(ACTIVE)
-
 
   @@map("users")
 }
@@ -49,40 +50,41 @@ model Profile {
   @@map("profiles")
 }
 
-  enum orderStatus {
-    pending
-    onGoing
-    completed
-    cancelled
-  }
+enum orderStatus {
+  pending
+  onGoing
+  completed
+  cancelled
+}
 
-  enum transactionType {
-      ONLINE
-      WALK_IN
-  }
+enum transactionType {
+  ONLINE
+  WALK_IN
+}
 
-  enum paymentMethods {
-    cod
-    gcash
-    cash
-  }
+enum paymentMethods {
+  cod
+  gcash
+  cash
+}
 
 model Order_Details {
-  id              Int            @id @default(autoincrement())
-  order_id        String         @unique
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  paymentMethod   String         @default("cash")
-  totalAmount     Int
-  contact         String         @default("Zsakers cafe")
-  user            User           @relation(fields: [userId], references: [id])
-  userId          Int
-  address         String         @default("Zsakers Cafe")
-  order_status    orderStatus    @default(pending)
-  delivery_status Int            @default(0)
-  cart_product    Cart_Product[]
-  transaction_type transactionType  @default(ONLINE)
-  cancel_reason String  @default("")
+  id               Int             @id @default(autoincrement())
+  order_id         String          @unique
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  paymentMethod    String          @default("cash")
+  totalAmount      Int
+  contact          String          @default("Zsakers cafe")
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           Int
+  address          String          @default("Zsakers Cafe")
+  order_status     orderStatus     @default(pending)
+  delivery_status  Int             @default(0)
+  cart_product     Cart_Product[]
+  transaction_type transactionType @default(ONLINE)
+  cancel_reason    String          @default("")
+
   @@map("order_details")
 }
 
