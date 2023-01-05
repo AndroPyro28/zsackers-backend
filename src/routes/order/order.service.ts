@@ -65,7 +65,7 @@ export class OrderService {
       return res.json({
         ...returnJson,
         checkouturl: `${process.env.CLIENT_URL}/customer/payment`,
-        order_id: hashId.substring(0, 10) ,
+        order_id: hashId.substring(0, 5) ,
       });
     }
   }
