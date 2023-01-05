@@ -9,7 +9,6 @@ import { OrderDetails } from 'src/models/order-details.model';
 import { orderStatus } from '@prisma/client';
 import { VonageApi } from 'src/common/utils/vonage.utils';
 import { FindOrderAdmin } from './dto/find-order.dto';
-import { totalmem } from 'os';
 @Injectable()
 export class OrderService {
   constructor(
@@ -21,7 +20,7 @@ export class OrderService {
   
   async checkout(createOrderDto: CreateOrderDto,currentUser: UserInteface, res: Response) {
     const { paymentType, cartProducts, address, contact, totalAmount} = createOrderDto;
-    const total_amount = Math.round(totalAmount * 0.1 + totalAmount)
+    const total_amount = Math.round(40 + totalAmount)
     const returnJson: any = {
       proceedPayment: true,
       paymentType,
@@ -61,10 +60,12 @@ export class OrderService {
       });
     }
     if (paymentType === 'cod') {
+
+      const hashId = `${uuid()}`.replace(/\-/g,"").replace(/\D+/g, '');
       return res.json({
         ...returnJson,
         checkouturl: `${process.env.CLIENT_URL}/customer/payment`,
-        order_id: `${uuid()}`.replace(/\-/g,""),
+        order_id: hashId.substring(0, 10) ,
       });
     }
   }
@@ -128,7 +129,6 @@ export class OrderService {
 
   async summary( yearSelected: number ) {
     const orders = await this.orderDetailsModel.findAllOrders();
-    console.log(yearSelected);
     const monthlyCancelledTransactions = [
       {
         month: 0,
