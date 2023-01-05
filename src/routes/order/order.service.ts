@@ -339,7 +339,7 @@ export class OrderService {
       const orderDate = new Date(order.createdAt)?.toISOString().slice(0, 10);
       const todayDate = new Date()?.toISOString().slice(0, 10);
 
-      if(orderDate  === todayDate ) {
+      if(orderDate  === todayDate && order.order_status !== 'cancelled') {
         return total + order.totalAmount
       }
 
@@ -378,13 +378,6 @@ export class OrderService {
       }
     });
 
-    console.log({ 
-      monthlyCancelledTransactions,
-      monthlySuccessTransactions,
-      monthlyTotalTransactions,
-      monthlySales,
-      totalSalesToday 
-    })
 
     return {
       monthlyCancelledTransactions,
