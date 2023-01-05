@@ -102,9 +102,6 @@ export class OrderDetails {
 
   async findAllCompletedAndCancelledOrders(filterDateFrom: string, filterDateTo: string,) {
     try {
-
-      console.log(filterDateFrom,
-        filterDateTo);
       const orders = await order_Details.findMany({
         where: {
           // OR: [

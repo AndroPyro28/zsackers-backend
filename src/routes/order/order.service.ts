@@ -126,7 +126,7 @@ export class OrderService {
     return `This action returns a #${id} order`;
   }
 
-  async summary( ) {
+  async summary( yearSelected: number ) {
     const orders = await this.orderDetailsModel.findAllOrders();
 
     const monthlyCancelledTransactions = [
@@ -349,7 +349,7 @@ export class OrderService {
     orders.forEach((order) => {
       const month = new Date(order.createdAt).getMonth();
       const year = new Date(order.createdAt).getFullYear();
-      if (year === yearNow && order.order_status === 'cancelled') {
+      if (year === yearSelected && order.order_status === 'cancelled') {
         monthlyCancelledTransactions[month].total++;
       }
     });
@@ -357,7 +357,7 @@ export class OrderService {
     orders.forEach((order) => {
       const month = new Date(order.createdAt).getMonth();
       const year = new Date(order.createdAt).getFullYear();
-      if (year === yearNow && order.order_status === 'completed') {
+      if (year === yearSelected && order.order_status === 'completed') {
         monthlySuccessTransactions[month].total++;
       }
     });
@@ -365,7 +365,7 @@ export class OrderService {
     orders.forEach((order) => {
       const month = new Date(order.createdAt).getMonth();
       const year = new Date(order.createdAt).getFullYear();
-      if (year === yearNow) {
+      if (year === yearSelected) {
         monthlyTotalTransactions[month].total++;
       }
     });
@@ -373,7 +373,7 @@ export class OrderService {
     orders.forEach((order) => {
       const month = new Date(order.createdAt).getMonth();
       const year = new Date(order.createdAt).getFullYear();
-      if (year === yearNow && order?.order_status != 'cancelled') {
+      if (year === yearSelected && order?.order_status != 'cancelled') {
         monthlySales[month].total += order?.totalAmount;
       }
     });

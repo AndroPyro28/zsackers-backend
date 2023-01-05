@@ -88,10 +88,10 @@ export class OrderController {
     return this.orderService.findOneByOrderId(order_id);
   }
 
-  @Get('summary')
+  @Get('summary/:year')
   @Roles(['ADMIN', 'CUSTOMER', 'STAFF'])
-  summary() {
-    return this.orderService.summary();
+  summary(@Param('year') year: number) {
+    return this.orderService.summary(year);
   }
 
   @Get(':id')
