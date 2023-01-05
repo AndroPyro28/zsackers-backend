@@ -90,7 +90,7 @@ export class OrderController {
 
   @Get('summary/:year')
   @Roles(['ADMIN', 'CUSTOMER', 'STAFF'])
-  summary(@Param('year') year: number) {
+  summary(@Param('year', ParseIntPipe) year: number) {
     return this.orderService.summary(year);
   }
 

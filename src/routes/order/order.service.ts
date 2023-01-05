@@ -128,7 +128,7 @@ export class OrderService {
 
   async summary( yearSelected: number ) {
     const orders = await this.orderDetailsModel.findAllOrders();
-
+    console.log(yearSelected);
     const monthlyCancelledTransactions = [
       {
         month: 0,
@@ -377,6 +377,14 @@ export class OrderService {
         monthlySales[month].total += order?.totalAmount;
       }
     });
+
+    console.log({ 
+      monthlyCancelledTransactions,
+      monthlySuccessTransactions,
+      monthlyTotalTransactions,
+      monthlySales,
+      totalSalesToday 
+    })
 
     return {
       monthlyCancelledTransactions,
