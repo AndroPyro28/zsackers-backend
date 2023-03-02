@@ -29,9 +29,6 @@ export class Category {
                 },
                 include: {
                     sub_category: {
-                        include: {
-                            set_category: true
-                        },
                         orderBy: [{
                             createdAt: 'desc'
                         }],

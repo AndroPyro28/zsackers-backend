@@ -69,6 +69,7 @@ export class ProductController {
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateProduct
   ) {
+    console.log(body)
      return this.productService.updateProduct(id, body);
   }
 }

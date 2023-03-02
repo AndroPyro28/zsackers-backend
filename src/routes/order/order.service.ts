@@ -55,7 +55,6 @@ export class OrderService {
         const { data } = JSON.parse(response.body);
 
         const { checkouturl, hash } = data;
-        console.log('.............', checkouturl, hash)
         return res.json({ ...returnJson, checkouturl, order_id: hash });
       });
     }

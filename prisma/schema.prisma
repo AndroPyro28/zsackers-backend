@@ -20,6 +20,11 @@ enum statuses {
   INACTIVE
 }
 
+enum productType {
+  SINGLE
+  BUNDLE
+}
+
 model User {
   id                Int             @id @default(autoincrement())
   createdAt         DateTime        @default(now())
@@ -120,37 +125,30 @@ model Category {
   updatedAt    DateTime       @updatedAt
   sub_category Sub_Category[]
   Product      Product[]
-  Bundle       Bundle[]
 
   @@map("category")
 }
 
 model Sub_Category {
-  id           Int            @id @default(autoincrement())
-  name         String
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  category     Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId   Int
-  Product      Product[]
-  set_category Set_Category[]
-  Bundle       Bundle[]
+  id         Int       @id @default(autoincrement())
+  name       String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  category   Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId Int
+  Product    Product[]
+  // set_category Set_Category[]
 
   @@map("sub_category")
 }
 
-model Set_Category {
-  id            Int          @id @default(autoincrement())
-  name          String
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  premium       Boolean      @default(false)
-  subcategory   Sub_Category @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
-  subcategoryId Int
-  Product       Product[]
-  Bundle        Bundle[]
-
-  @@map("set_category")
+model Bundles {
+  id              Int     @id @default(autoincrement())
+  bundleParentProductId Int
+  bundleParentProduct   Product @relation("bundleParentProduct", fields: [bundleParentProductId], references: [id], onDelete: Cascade)
+  
+  bundleChildProductId Int
+  bundleChildProduct   Product @relation("bundleChildProduct", fields: [bundleChildProductId], references: [id], onDelete: Cascade)
 }
 
 model Product {
@@ -171,45 +169,12 @@ model Product {
   subcategoryId  Int?
   archive        Boolean               @default(false)
   Product_Flavor Cart_Product_Flavor[]
-  // productId       Int?
-  // Product        Product?              @relation("products", fields: [productId], references: [id], onDelete: SetNull)
-  // products       Product[]             @relation("products")
-  set_category   Set_Category?         @relation(fields: [setcategoryId], references: [id])
-  setcategoryId  Int?
-  // product_bundle  bundle[]              @relation("product_bundle")
-  // product_variant bundle[]              @relation("product_variant")
-  // Bundle_Product  Bundle_Product[]
-  bundle_product Bundle_Product[]
+  productId      Int?
+  Product        Product?              @relation("products", fields: [productId], references: [id], onDelete: SetNull)
+  products       Product[]             @relation("products")
+  productType   productType @default(SINGLE)
+  bundleParentProduct Bundles[]    @relation("bundleParentProduct")
+  bundleChildProduct  Bundles[]    @relation("bundleChildProduct")
 
   @@map("products")
-}
-
-model Bundle {
-  id             Int              @id @default(autoincrement())
-  name           String           @default("")
-  price          Int?             @default(0)
-  quantity       Int              @default(1)
-  image_url      String?
-  image_id       String?
-  category       Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  categoryId     Int?
-  sub_category   Sub_Category?    @relation(fields: [subcategoryId], references: [id], onDelete: SetNull)
-  subcategoryId  Int?
-  set_category   Set_Category?    @relation(fields: [setcategoryId], references: [id])
-  setcategoryId  Int?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  Bundle_Product Bundle_Product[]
-
-  @@map("bundles")
-}
-
-model Bundle_Product {
-  id         Int      @id @default(autoincrement())
-  product    Product? @relation(fields: [product_id], references: [id])
-  product_id Int
-  bundle     Bundle?  @relation(fields: [bundle_id], references: [id])
-  bundle_id  Int?
-
-  @@map("bundle_products")
 }

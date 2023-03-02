@@ -8,6 +8,7 @@ CREATE TABLE `users` (
     `hashUpdatePWToken` VARCHAR(191) NULL,
     `isVerify` BOOLEAN NULL DEFAULT false,
     `role` ENUM('ADMIN', 'CUSTOMER', 'STAFF') NOT NULL,
+    `status` ENUM('ACTIVE', 'INACTIVE') NOT NULL DEFAULT 'ACTIVE',
 
     UNIQUE INDEX `users_email_key`(`email`),
     PRIMARY KEY (`id`)
@@ -30,12 +31,20 @@ CREATE TABLE `profiles` (
 -- CreateTable
 CREATE TABLE `order_details` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `order_id` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
-    `paymentMethod` VARCHAR(191) NOT NULL,
+    `paymentMethod` VARCHAR(191) NOT NULL DEFAULT 'cash',
     `totalAmount` INTEGER NOT NULL,
+    `contact` VARCHAR(191) NOT NULL DEFAULT 'Zsakers cafe',
     `userId` INTEGER NOT NULL,
+    `address` VARCHAR(191) NOT NULL DEFAULT 'Zsakers Cafe',
+    `order_status` ENUM('pending', 'onGoing', 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
+    `delivery_status` INTEGER NOT NULL DEFAULT 0,
+    `transaction_type` ENUM('ONLINE', 'WALK_IN') NOT NULL DEFAULT 'ONLINE',
+    `cancel_reason` VARCHAR(191) NOT NULL DEFAULT '',
 
+    UNIQUE INDEX `order_details_order_id_key`(`order_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -109,32 +118,7 @@ CREATE TABLE `products` (
     `subcategoryId` INTEGER NULL,
     `archive` BOOLEAN NOT NULL DEFAULT false,
     `setcategoryId` INTEGER NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `bundles` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(191) NOT NULL DEFAULT '',
-    `price` INTEGER NULL DEFAULT 0,
-    `quantity` INTEGER NOT NULL DEFAULT 1,
-    `image_url` VARCHAR(191) NULL,
-    `image_id` VARCHAR(191) NULL,
-    `categoryId` INTEGER NULL,
-    `subcategoryId` INTEGER NULL,
-    `setcategoryId` INTEGER NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `bundle_products` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `product_id` INTEGER NOT NULL,
-    `bundle_id` INTEGER NULL,
+    `productType` ENUM('SINGLE', 'BUNDLE') NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -143,7 +127,7 @@ CREATE TABLE `bundle_products` (
 ALTER TABLE `profiles` ADD CONSTRAINT `profiles_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `order_details` ADD CONSTRAINT `order_details_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `order_details` ADD CONSTRAINT `order_details_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `cart_products` ADD CONSTRAINT `cart_products_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `products`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -171,18 +155,3 @@ ALTER TABLE `products` ADD CONSTRAINT `products_subcategoryId_fkey` FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE `products` ADD CONSTRAINT `products_setcategoryId_fkey` FOREIGN KEY (`setcategoryId`) REFERENCES `set_category`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `bundles` ADD CONSTRAINT `bundles_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `category`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `bundles` ADD CONSTRAINT `bundles_subcategoryId_fkey` FOREIGN KEY (`subcategoryId`) REFERENCES `sub_category`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `bundles` ADD CONSTRAINT `bundles_setcategoryId_fkey` FOREIGN KEY (`setcategoryId`) REFERENCES `set_category`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `bundle_products` ADD CONSTRAINT `bundle_products_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `bundle_products` ADD CONSTRAINT `bundle_products_bundle_id_fkey` FOREIGN KEY (`bundle_id`) REFERENCES `bundles`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

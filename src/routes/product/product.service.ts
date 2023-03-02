@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Cloudinary } from 'src/common/utils/cloudinary.utils';
-import { Product } from 'src/models';
+import { Bundles, Product } from 'src/models';
 import { CreateProductDto, UpdateProduct } from './dto/product.dto';
 
 @Injectable()
@@ -10,7 +10,11 @@ export class ProductService {
     /**
      *
      */
-    constructor(private readonly cloudinary: Cloudinary, private readonly productModel: Product) {}
+    constructor(
+        private readonly cloudinary: Cloudinary,
+        private readonly productModel: Product,
+        private readonly bundleModel: Bundles
+    ) {}
 
     async createProduct(body: CreateProductDto) {
         let imageInfo = {
@@ -24,9 +28,15 @@ export class ProductService {
                 image_id: public_id
             }
         }
+
+        
        
         body = {...body, ...imageInfo};
         const newProduct = await this.productModel.createProduct(body);
+
+        if(body.productType === 'BUNDLE') {
+            const newBundle = await this.bundleModel.createBundle(newProduct.id, body.productIds)
+        }
 
         if(!newProduct) throw new ForbiddenException('something went wrong...');
 

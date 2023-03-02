@@ -6,6 +6,9 @@ import { Product as ProductModel } from '@prisma/client';
 @Injectable()
 export class Product {
   async createProduct(body: CreateProductDto) {
+    if(body.quantity == 0 || !body.quantity) {
+      body.quantity = 1;
+    }
     try {
       const newProduct = await product.create({
         data: {
@@ -18,8 +21,7 @@ export class Product {
           details: body.details,
           categoryId: Number(body.categoryId),
           subcategoryId: Number(body.subcategoryId),
-          setcategoryId: Number(body.setcategoryId),
-          // productId: Boolean(body.productId) ? Number(body.productId) : null,
+          productType : body.productType
         },
       });
       return newProduct;
@@ -55,6 +57,18 @@ export class Product {
         include: {
           category: true,
           sub_category: true,
+          bundleParentProduct: {
+            select: {
+              id: true,
+              bundleChildProduct: true,
+            }
+          },
+          bundleChildProduct: {
+            select: {
+              id: true,
+              bundleParentProduct: true,
+            }
+          }
         },
         orderBy: {
           createdAt: 'desc'

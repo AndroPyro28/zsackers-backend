@@ -1,5 +1,5 @@
-import { IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString } from "class-validator";
-
+import { IsArray, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString } from "class-validator";
+import {productType} from '@prisma/client'
 export class CreateProductDto {
     @IsNotEmpty()
     productName:string;
@@ -12,7 +12,7 @@ export class CreateProductDto {
     @IsNumber()
     productStock:number;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsNumber()
     quantity: number;
 
@@ -23,10 +23,6 @@ export class CreateProductDto {
     @IsNotEmpty()
     @IsNumberString()
     subcategoryId: string;
-
-    @IsNotEmpty()
-    @IsNumberString()
-    setcategoryId: string;
 
     @IsOptional()
     @IsString()
@@ -44,6 +40,13 @@ export class CreateProductDto {
     image_url: string;
     @IsOptional()
     image_id: string;
+
+    @IsOptional()
+    @IsArray()
+    productIds: number[];
+
+    @IsOptional()
+    productType: productType
 }
 
 export class UpdateProduct {
@@ -59,7 +62,7 @@ export class UpdateProduct {
     @IsNumber()
     stock: number;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsNumber()
     quantity: number;
 
@@ -82,10 +85,6 @@ export class UpdateProduct {
     @IsNumber()
     @IsNotEmpty()
     subcategoryId: number;
-
-    @IsNotEmpty()
-    @IsNumber()
-    setcategoryId: number;
 
     @IsNumber()
     @IsOptional()
