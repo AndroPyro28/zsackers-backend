@@ -35,7 +35,7 @@ export class ProductService {
         const newProduct = await this.productModel.createProduct(body);
 
         if(body.productType === 'BUNDLE') {
-            const newBundle = await this.bundleModel.createBundle(newProduct.id, body.productIds)
+            await this.bundleModel.createBundle(newProduct.id, body.productIds)
         }
 
         if(!newProduct) throw new ForbiddenException('something went wrong...');
@@ -62,7 +62,13 @@ export class ProductService {
         this.cloudinary.cloudinaryDelete(body.image_id)
         const {secure_url, public_id} = await this.cloudinary.cloudinaryUpload(body.image_url, 'zsackers_product_image')
         body.image_url = secure_url;
-        body.image_id = public_id
+        body.image_id = public_id;
+
+        if(body.productType === 'BUNDLE') { // delete bundles first
+            await this.bundleModel.deleteBundleChildren(body.id);
+            await this.bundleModel.createBundle(body.id, body.bundleChildrenProductIds)
+        }
+        
         const updateProduct = await this.productModel.updateProduct(id, body)
         return updateProduct
     }

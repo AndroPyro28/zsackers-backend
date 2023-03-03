@@ -105,6 +105,18 @@ export class Product {
         include:{
           category: true,
           sub_category: true,
+          bundleParentProduct: {
+            select: {
+              id: true,
+              bundleChildProduct: true,
+            }
+          },
+          bundleChildProduct: {
+            select: {
+              id: true,
+              bundleParentProduct: true,
+            }
+          }
         }
       })
       return result;
@@ -148,8 +160,11 @@ export class Product {
     }
   }
 
+
   async updateProduct(id: number, body: UpdateProduct) {
     try {
+      delete body.id;
+      delete body.bundleChildrenProductIds
       const updated = await product.update({
         where: {
           id

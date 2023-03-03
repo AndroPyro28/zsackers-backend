@@ -50,6 +50,11 @@ export class CreateProductDto {
 }
 
 export class UpdateProduct {
+
+    @IsOptional()
+    @IsNumber()
+    id: number;
+
     @IsNotEmpty()
     @IsString()
     productName: string;
@@ -82,6 +87,10 @@ export class UpdateProduct {
     @IsNotEmpty()
     categoryId: number;
 
+    @IsString()
+    @IsNotEmpty()
+    productType: productType
+
     @IsNumber()
     @IsNotEmpty()
     subcategoryId: number;
@@ -89,4 +98,7 @@ export class UpdateProduct {
     @IsNumber()
     @IsOptional()
     productId: number;
+
+    @IsOptional()
+    bundleChildrenProductIds: number[];
 }

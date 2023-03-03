@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPip
 import { GetCurrentUser } from 'src/common/decorators/get-current-user.decorator';
 import { CartProductService } from './cart-product.service';
 import { Roles } from 'src/common/decorators/roles.decorator';
+import { addTocartDto } from './dto';
 @Controller('cart-products')
 export class CartProductController {
 
@@ -14,10 +15,10 @@ export class CartProductController {
     @Roles(['CUSTOMER', 'STAFF', 'ADMIN'])
     @HttpCode(HttpStatus.CREATED)
     async addToCart(
-        @Body('productId', ParseIntPipe) productId: number,
+        @Body() body: addTocartDto,
         @GetCurrentUser('id') userId: number
     ) {
-        return this.cartProduct.addToCart(productId, userId);
+        return this.cartProduct.addToCart(body, userId);
     }
 
     @Get()

@@ -1,5 +1,8 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CartProduct } from 'src/models';
+import { throws } from 'assert';
+import { CartProduct, Product } from 'src/models';
+import { CartProductVariants } from 'src/models/cart-product-variants.model';
+import { addTocartDto } from './dto';
 
 @Injectable()
 export class CartProductService {
@@ -7,15 +10,25 @@ export class CartProductService {
     /**
      *
      */
-    constructor(private readonly cartProductModel: CartProduct) {
+    constructor(
+        private readonly cartProductModel: CartProduct,
+        private readonly productModel: Product,
+        private readonly cartProductVariantsModel: CartProductVariants
+        ) {
     }
 
-    async addToCart(productId: number, userId: number) {
-        const result = await this.cartProductModel.addToCart(productId, userId);
+    async addToCart(body: addTocartDto, userId: number) {
 
-        if(!result) throw new ForbiddenException('Something went wrong...')
+        const product = await this.productModel.getProductById(body.productId);
+        const newCartProduct = await this.cartProductModel.addToCart(body.productId, userId);
 
-        return result;
+        if(product.productType === 'BUNDLE') {
+            this.cartProductVariantsModel.createVariants(newCartProduct.id, body.bundleVariants)
+        }
+
+        if(!newCartProduct) throw new ForbiddenException('Something went wrong...')
+
+        return newCartProduct;
     }
 
     async getCartProducts (userId: number) {
