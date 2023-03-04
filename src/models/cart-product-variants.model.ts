@@ -24,4 +24,19 @@ export class CartProductVariants {
             console.error(error)
         }
     }
+
+    async findVariants(cartProductIds: number[]) {
+        try {
+            const variants = await cart_Product_Variant.findMany({
+                where: {
+                    cart_product_id: {
+                        in: cartProductIds
+                    }
+                }
+            })
+            return variants;
+        } catch (error) {
+         console.error(error)   
+        }
+    }
 }

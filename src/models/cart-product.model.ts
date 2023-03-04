@@ -23,6 +23,29 @@ export class CartProduct {
     }
   }
 
+  async findManyByIds(cartProductIds: number[]) {
+    try {
+      const cartProducts = await cart_Product.findMany({
+        where: {
+          id: {
+            in: cartProductIds
+          },
+        },
+        include: {
+          product: true,
+          Cart_Product_Variant: {
+            include: {
+              product: true
+            }
+          }
+        }
+      })
+      return cartProducts;
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   async getProductCartById(cartProductId: number) {
     try {
       const product = await cart_Product.findFirst({

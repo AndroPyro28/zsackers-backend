@@ -144,14 +144,15 @@ export class Product {
   async updateProductsStocks(products: {id: number, quantity: number}[]) {
     try {
       products.forEach(async (p) => {
-       await product.update({
+       await product.updateMany({
           where: {
-            id: p.id
+            id: p.id,
+            productType: 'SINGLE'
           },
           data: {
             stock: {
               decrement: p.quantity
-            }
+            },
           },
         })
       })
