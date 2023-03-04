@@ -246,7 +246,12 @@ export class OrderDetails {
           },
           cart_product: {
             include: {
-              product: true
+              product: true,
+              Cart_Product_Variant: {
+                include: {
+                  product: true
+                }
+              }
             }
           }
         },
