@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { SignupDto } from 'src/routes/auth/dto/auth.dto';
+import { SignupDto, UpdatePasswordDto } from 'src/routes/auth/dto/auth.dto';
+import { UpdateUserDto } from 'src/routes/user/dto/update-user.dto';
 import { user } from './root.model';
 
 @Injectable()
@@ -53,6 +54,59 @@ export class User {
       return currentUser;
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  async updateUser(id: number, updateUserDto: UpdateUserDto) {
+    try {
+      const updatedUserResult = await user.update({
+        where: {
+          id
+        },
+        data: {
+          profile: {
+            update: {
+              ...updateUserDto
+            }
+          }
+        },
+      })
+      return updatedUserResult
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async updatehashResetPwToken(userId: number, hashToken: string) {
+    try {
+      const update = await user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          hashUpdatePWToken: hashToken
+        }
+      })
+
+      return update
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async updatePassword(userId:number, newPassword: string) {
+    try {
+      const update = await user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          password: newPassword
+        }
+      })
+      return update
+    } catch (error) {
+      console.error(error)
     }
   }
 }

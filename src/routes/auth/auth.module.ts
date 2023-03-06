@@ -5,10 +5,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { User } from 'src/models';
 import { AtStrategy } from './strategies';
 import { ArgonHelper } from 'src/common/helpers/argon.helper';
+import { SMTP } from 'src/common/utils';
 
 @Module({
   imports: [JwtModule.register({})],
   controllers: [AuthController],
-  providers: [AuthService, User, AtStrategy, ArgonHelper],
+  providers: [AuthService, User, AtStrategy, ArgonHelper, SMTP],
 })
 export class AuthModule {}

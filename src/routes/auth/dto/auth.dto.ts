@@ -43,3 +43,23 @@ export class SigninDto {
     @IsNotEmpty()
     password: string;
 }
+
+export class confirmResetCodeDto {
+    @IsNotEmpty()
+    @IsEmail()
+    email: string;
+
+    @IsNotEmpty()
+    code: string
+}
+
+export class UpdatePasswordDto {
+    @IsNotEmpty()
+    password: string;
+
+    @IsNotEmpty()
+    @Match('password', {
+        message: 'password and password confirmation do not match'
+    })
+    confirmPassword: string;
+}

@@ -4,8 +4,9 @@ import { AuthModule, CategoryModule, SubcategoryModule, ProductModule } from './
 import { CartProductModule } from './routes/cart-product/cart-product.module';
 import { StaffModule } from './routes/staff/staff.module';
 import { OrderModule } from './routes/order/order.module';
+import { UserModule } from './routes/user/user.module';
 
 @Module({
-  imports: [AuthModule, CategoryModule, SubcategoryModule, ProductModule, CartProductModule, StaffModule, OrderModule],
+  imports: [AuthModule, CategoryModule, SubcategoryModule, ProductModule, CartProductModule, StaffModule, OrderModule, UserModule],
 })
 export class AppModule {}
