@@ -465,6 +465,24 @@ export class OrderService {
   async cancelOrder(id: number, cancelOrderDto: CancelOrderDto) {
     const order = await this.orderDetailsModel.findOrderById(id);
 
+    const productToRetrieve: {id: number, stock: number}[] = []
+    order?.cart_product.forEach((cartProduct) => {
+      if(cartProduct.product.productType === 'BUNDLE') {
+        cartProduct.Cart_Product_Variant.forEach((cartProductVariant) => {
+          productToRetrieve.push({
+            id: cartProductVariant.productId,
+            stock: cartProductVariant.quantity
+          })
+        })
+      } else {
+        productToRetrieve.push({
+          id: cartProduct.productId,
+          stock: cartProduct.product.quantity
+        })
+      }
+    })
+
+    this.productModel.retrieveCancelledProductsStocks(productToRetrieve)
     if( order.transaction_type === 'ONLINE' && order?.delivery_status < 2  ) {
 
       const message = `Good day ${order.user.profile.firstname} ${order.user.profile.lastname},

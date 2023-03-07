@@ -93,6 +93,25 @@ export class Product {
     }
   }
 
+  async retrieveCancelledProductsStocks (productToRetrieve: {id: number, stock: number}[]) {
+    try {
+      productToRetrieve.forEach(async (p) => {
+         await product.update({
+          where: {
+            id: p.id,
+          },
+          data: {
+            stock: {
+              increment: p.stock
+            }
+          }
+        })
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   async getProductById(id: number) {
     try {
       const result = await product.findUnique({

@@ -272,8 +272,18 @@ export class OrderDetails {
               id: true,
               email: true,
               profile: true
-            }
+            },
           },
+          cart_product: {
+            include: {
+              Cart_Product_Variant: {
+                include: {
+                  product: true
+                }
+              },
+              product: true
+            },
+          }
       }});
       return order;
     } catch (error) {
