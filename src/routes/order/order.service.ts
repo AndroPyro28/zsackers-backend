@@ -465,9 +465,7 @@ export class OrderService {
   async cancelOrder(id: number, cancelOrderDto: CancelOrderDto) {
     const order = await this.orderDetailsModel.findOrderById(id);
 
-    
-
-    if(order?.delivery_status < 2 ) {
+    if( order.transaction_type === 'ONLINE' && order?.delivery_status < 2  ) {
 
       const message = `Good day ${order.user.profile.firstname} ${order.user.profile.lastname},
 
@@ -475,17 +473,16 @@ export class OrderService {
 
     -Zsakers cafe
     `
-    if(order.transaction_type === 'ONLINE') {
       this.vonageApi.sendSms(order.contact, message)
-    }
 
       const cancelOrder = await this.orderDetailsModel.cancelOrder(id, cancelOrderDto);
 
       if(!cancelOrder) throw new ForbiddenException('Order didnt cancelled');
       return cancelOrder
     } else {
-      throw new ForbiddenException('Order didnt cancelled');
-    }
+      const cancelOrder = await this.orderDetailsModel.cancelOrder(id, cancelOrderDto);
+      return cancelOrder
+    }  
   }
 
   remove(id: number) {
