@@ -4,7 +4,7 @@ import { Public } from 'src/common/decorators/public.decorator';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import UserInteface from 'src/models/user.model';
 import { AuthService } from './auth.service';
-import { confirmResetCodeDto, SigninDto, SignupDto, UpdatePasswordDto } from './dto/auth.dto';
+import { ChangePasswordDto, confirmResetCodeDto, SigninDto, SignupDto, UpdatePasswordDto } from './dto/auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -56,5 +56,15 @@ export class AuthController {
         @Body() body: UpdatePasswordDto
         ) {
         return this.authService.updatePassword(userId ,body)
+    }
+
+    @Post('change-password')
+    @Roles(['ADMIN', 'CUSTOMER', 'STAFF'])
+    @HttpCode(HttpStatus.OK)
+    async changePassword(
+        @GetCurrentUser('id') userId: number,
+        @Body() body: ChangePasswordDto
+        ) {
+        return this.authService.changePassword(userId ,body)
     }
 }

@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import {User} from 'src/models/';
-import { confirmResetCodeDto, SigninDto, SignupDto, UpdatePasswordDto } from './dto/auth.dto';
+import { ChangePasswordDto, confirmResetCodeDto, SigninDto, SignupDto, UpdatePasswordDto } from './dto/auth.dto';
 import * as argon from 'argon2'
 import { JwtService } from '@nestjs/jwt';
 import { TokenPayload } from './types';
@@ -121,6 +121,24 @@ export class AuthService {
 
     async updatePassword (userId:number, body: UpdatePasswordDto) {
       const hashPw = await this.argonhelper.hash(body.password)
+      const resetPassword = await this.userModel.updatePassword(userId, hashPw);
+      if(!resetPassword) throw new ForbiddenException('Password reset failed');
+
+      return {
+        count: 1
+      }
+    }
+
+    async changePassword (userId: number, body: ChangePasswordDto) {
+
+      const user = await this.userModel.findUserByid(userId);
+      if(!user) throw new ForbiddenException('Invalid Credentials');
+
+      const isPasswordMatch = await this.argonhelper.compare(body.oldPassword, user.password)
+      if(!isPasswordMatch) throw new ForbiddenException('Invalid Credentials');
+
+      const hashPw = await this.argonhelper.hash(body.newPassword)
+
       const resetPassword = await this.userModel.updatePassword(userId, hashPw);
       if(!resetPassword) throw new ForbiddenException('Password reset failed');
 
