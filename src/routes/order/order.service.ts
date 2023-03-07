@@ -465,7 +465,11 @@ export class OrderService {
   async cancelOrder(id: number, cancelOrderDto: CancelOrderDto) {
     const order = await this.orderDetailsModel.findOrderById(id);
 
-    const message = `Good day ${order.user.profile.firstname} ${order.user.profile.lastname},
+    
+
+    if(order?.delivery_status < 2 ) {
+
+      const message = `Good day ${order.user.profile.firstname} ${order.user.profile.lastname},
 
     Your order has been cancelled, reason: ${cancelOrderDto.reason}
 
@@ -474,10 +478,14 @@ export class OrderService {
     if(order.transaction_type === 'ONLINE') {
       this.vonageApi.sendSms(order.contact, message)
     }
-    const cancelOrder = await this.orderDetailsModel.cancelOrder(id, cancelOrderDto);
 
-    if(!cancelOrder) throw new ForbiddenException('Didnt update status');
-    return cancelOrder
+      const cancelOrder = await this.orderDetailsModel.cancelOrder(id, cancelOrderDto);
+
+      if(!cancelOrder) throw new ForbiddenException('Order didnt cancelled');
+      return cancelOrder
+    } else {
+      throw new ForbiddenException('Order didnt cancelled');
+    }
   }
 
   remove(id: number) {

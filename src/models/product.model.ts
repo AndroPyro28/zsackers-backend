@@ -44,9 +44,6 @@ export class Product {
         search.subcategoryId !== 0 && {
          subcategoryId: search.subcategoryId
         },
-        search.setcategoryId !== 0 && {
-          setcategoryId: search.setcategoryId
-         },
        ];
       const conditionArr = arr.filter(value => typeof value === 'object')
       const products = await product.findMany({
