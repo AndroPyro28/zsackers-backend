@@ -61,8 +61,10 @@ CREATE TABLE `cart_products` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `cart_product_flavor` (
+CREATE TABLE `Cart_Product_Variants` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `quantity` INTEGER NOT NULL,
+    `cart_product_id` INTEGER NOT NULL,
     `productId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -91,13 +93,10 @@ CREATE TABLE `sub_category` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `set_category` (
+CREATE TABLE `Bundles` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(191) NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-    `premium` BOOLEAN NOT NULL DEFAULT false,
-    `subcategoryId` INTEGER NOT NULL,
+    `bundleParentProductId` INTEGER NOT NULL,
+    `bundleChildProductId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -117,8 +116,8 @@ CREATE TABLE `products` (
     `categoryId` INTEGER NULL,
     `subcategoryId` INTEGER NULL,
     `archive` BOOLEAN NOT NULL DEFAULT false,
-    `setcategoryId` INTEGER NULL,
-    `productType` ENUM('SINGLE', 'BUNDLE') NOT NULL,
+    `productId` INTEGER NULL,
+    `productType` ENUM('SINGLE', 'BUNDLE') NOT NULL DEFAULT 'SINGLE',
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -139,13 +138,19 @@ ALTER TABLE `cart_products` ADD CONSTRAINT `cart_products_orderId_fkey` FOREIGN 
 ALTER TABLE `cart_products` ADD CONSTRAINT `cart_products_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `cart_product_flavor` ADD CONSTRAINT `cart_product_flavor_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Cart_Product_Variants` ADD CONSTRAINT `Cart_Product_Variants_cart_product_id_fkey` FOREIGN KEY (`cart_product_id`) REFERENCES `cart_products`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Cart_Product_Variants` ADD CONSTRAINT `Cart_Product_Variants_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `sub_category` ADD CONSTRAINT `sub_category_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `category`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `set_category` ADD CONSTRAINT `set_category_subcategoryId_fkey` FOREIGN KEY (`subcategoryId`) REFERENCES `sub_category`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Bundles` ADD CONSTRAINT `Bundles_bundleParentProductId_fkey` FOREIGN KEY (`bundleParentProductId`) REFERENCES `products`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Bundles` ADD CONSTRAINT `Bundles_bundleChildProductId_fkey` FOREIGN KEY (`bundleChildProductId`) REFERENCES `products`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `products` ADD CONSTRAINT `products_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `category`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -154,4 +159,4 @@ ALTER TABLE `products` ADD CONSTRAINT `products_categoryId_fkey` FOREIGN KEY (`c
 ALTER TABLE `products` ADD CONSTRAINT `products_subcategoryId_fkey` FOREIGN KEY (`subcategoryId`) REFERENCES `sub_category`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `products` ADD CONSTRAINT `products_setcategoryId_fkey` FOREIGN KEY (`setcategoryId`) REFERENCES `set_category`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `products` ADD CONSTRAINT `products_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `products`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
