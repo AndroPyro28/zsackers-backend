@@ -142,9 +142,7 @@ export class AuthService {
       const resetPassword = await this.userModel.updatePassword(userId, hashPw);
       if(!resetPassword) throw new ForbiddenException('Password reset failed');
 
-      return {
-        count: 1
-      }
+      return resetPassword
     }
 
     async signToken({id, email}: TokenPayload) {
