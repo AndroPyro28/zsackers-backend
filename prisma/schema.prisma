@@ -23,6 +23,7 @@ enum statuses {
 enum productType {
   SINGLE
   BUNDLE
+  ADDONS
 }
 
 model User {
