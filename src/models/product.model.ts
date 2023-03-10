@@ -9,6 +9,7 @@ export class Product {
     if(body.quantity == 0 || !body.quantity) {
       body.quantity = 1;
     }
+    console.log(body)
     try {
       const newProduct = await product.create({
         data: {
@@ -20,7 +21,7 @@ export class Product {
           image_id: body.image_id,
           details: body.details,
           categoryId: Number(body.categoryId),
-          subcategoryId: Number(body.subcategoryId),
+          subcategoryId: !body.subcategoryId ? null : Number(body.subcategoryId) ,
           productType : body.productType
         },
       });

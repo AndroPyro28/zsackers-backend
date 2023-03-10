@@ -20,7 +20,7 @@ export class CreateProductDto {
     @IsNumberString()
     categoryId: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsNumberString()
     subcategoryId: string;
 

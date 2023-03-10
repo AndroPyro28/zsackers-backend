@@ -33,7 +33,7 @@ export class ProductService {
        
         body = {...body, ...imageInfo};
         const newProduct = await this.productModel.createProduct(body);
-
+        
         if(body.productType === 'BUNDLE') {
             await this.bundleModel.createBundle(newProduct.id, body.productIds)
         }

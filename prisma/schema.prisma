@@ -168,7 +168,7 @@ model Product {
   category             Category?              @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   categoryId           Int?
   sub_category         Sub_Category?          @relation(fields: [subcategoryId], references: [id], onDelete: SetNull)
-  subcategoryId        Int?
+  subcategoryId        Int?                   
   archive              Boolean                @default(false)
   productId            Int?
   Product              Product?               @relation("products", fields: [productId], references: [id], onDelete: SetNull)
