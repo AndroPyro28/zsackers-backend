@@ -198,6 +198,7 @@ export class Product {
         },
         data: {
           ...body,
+          subcategoryId: Boolean(body.subcategoryId) ? body.subcategoryId : null
         },
       })
       return updated;
