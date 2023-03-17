@@ -22,9 +22,9 @@ export class CartProductService {
         const product = await this.productModel.getProductById(body.productId);
         const newCartProduct = await this.cartProductModel.addToCart(body.productId, userId);
 
-        if(product.productType === 'BUNDLE') {
+        // if(product.productType === 'BUNDLE') {
             this.cartProductVariantsModel.createVariants(newCartProduct.id, body.bundleVariants)
-        }
+        // }
 
         if(!newCartProduct) throw new ForbiddenException('Something went wrong...')
 

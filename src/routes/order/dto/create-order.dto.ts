@@ -8,6 +8,12 @@ class CartProducts {
     id: number;
     @IsNotEmpty()
     quantity: number;
+
+    @IsOptional()
+    @IsArray()
+    @ValidateNested({each: true})
+    @Type(() => CartProducts)
+    Cart_Product_Variant: CartProducts[]
 }
 
 

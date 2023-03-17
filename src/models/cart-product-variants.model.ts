@@ -32,6 +32,9 @@ export class CartProductVariants {
                     cart_product_id: {
                         in: cartProductIds
                     }
+                },
+                include: {
+                    product: true
                 }
             })
             return variants;

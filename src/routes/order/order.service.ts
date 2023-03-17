@@ -66,6 +66,8 @@ export class OrderService {
     if (paymentType === 'cod') {
 
       const hashId = `${uuid()}`.replace(/\-/g,"").replace(/\D+/g, '');
+
+      
       return res.json({
         ...returnJson,
         checkouturl: `${process.env.CLIENT_URL}/customer/payment`,
@@ -77,17 +79,38 @@ export class OrderService {
   async pos(createOrderDto: CreateOrderWalkinDto, userId: number) {
     const newOrderDetails = await this.orderDetailsModel.createOrderWalkin(createOrderDto, userId)
 
+    // const {cartProducts} = createOrderDto;
+    // const cartProductIds = cartProducts.map(cartProduct => cartProduct.id);
+
+    // const productIds = cartProducts.map(cartProduct => ({
+    //   id: cartProduct.product.id,
+    //   quantity: cartProduct.quantity,
+    //   parentQuantity: 1
+    // }));
+
     const {cartProducts} = createOrderDto;
     const cartProductIds = cartProducts.map(cartProduct => cartProduct.id);
 
-    const productIds = cartProducts.map(cartProduct => ({
+    const bundleVariants = await this.cartProductVariantsModel.findVariants(cartProductIds);
+    const productIds1 = cartProducts.map(cartProduct => ({
       id: cartProduct.product.id,
-      quantity: cartProduct.quantity
+      quantity: cartProduct.quantity,
+      parentQuantity: 1
     }));
 
-    const updateProducts = await this.productModel.updateProductsStocks(productIds)
+    const productIds2 = bundleVariants.map((bundleVariant) => {
+      const findParentCartProduct = cartProducts.find(cartProduct => cartProduct.id === bundleVariant.cart_product_id)
+      return {
+        id: bundleVariant.productId,
+        quantity: bundleVariant.quantity,
+        parentQuantity: findParentCartProduct.quantity
+      }
+    })
+    const productIdsToUpdate = [...productIds1, ...productIds2]
 
-    const updateCartProducts = await this.cartProductModel.updateManyCartProductsWithOrder(cartProductIds, newOrderDetails?.id)
+    this.productModel.updateProductsStocks(productIdsToUpdate)
+
+    this.cartProductModel.updateManyCartProductsWithOrder(cartProductIds, newOrderDetails?.id)
     return {
       success: true
     }
@@ -97,18 +120,31 @@ export class OrderService {
     const newOrderDetails = await this.orderDetailsModel.createOrder(createOrderDto, userId)
     const {cartProducts} = createOrderDto;
     const cartProductIds = cartProducts.map(cartProduct => cartProduct.id);
-
     const bundleVariants = await this.cartProductVariantsModel.findVariants(cartProductIds);
     const productIds1 = cartProducts.map(cartProduct => ({
       id: cartProduct.product.id,
-      quantity: cartProduct.quantity
+      quantity: cartProduct.quantity,
+      parentQuantity: 1
     }));
 
-    const productIds2 = bundleVariants.map((bundleVariant) => ({
-      id: bundleVariant.productId,
-      quantity: bundleVariant.quantity
-    }))
+    const productIds2 = bundleVariants.map((bundleVariant) => {
+      const findParentCartProduct = cartProducts.find(cartProduct => cartProduct.id === bundleVariant.cart_product_id)
+      
+      if(bundleVariant.product.productType === 'ADDONS') {
+        return {
+          id: bundleVariant.productId,
+          quantity: 1,
+          parentQuantity: findParentCartProduct.quantity
+        }
+      }
 
+      return {
+        id: bundleVariant.productId,
+        quantity: bundleVariant.quantity,
+        parentQuantity: 1
+      }
+      
+    })
     const productIdsToUpdate = [...productIds1, ...productIds2]
 
     this.productModel.updateProductsStocks(productIdsToUpdate)

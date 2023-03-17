@@ -9,7 +9,6 @@ export class Product {
     if(body.quantity == 0 || !body.quantity) {
       body.quantity = 1;
     }
-    console.log(body)
     try {
       const newProduct = await product.create({
         data: {
@@ -53,7 +52,11 @@ export class Product {
           archive: false,
         },
         include: {
-          category: true,
+          category: {
+            include: {
+              Product: true
+            }
+          },
           sub_category: true,
           bundleParentProduct: {
             select: {
@@ -65,8 +68,8 @@ export class Product {
             select: {
               id: true,
               bundleParentProduct: true,
-            }
-          }
+            },
+          },
         },
         orderBy: {
           createdAt: 'desc'
@@ -120,7 +123,11 @@ export class Product {
           id,
         },
         include:{
-          category: true,
+          category: {
+            include: {
+              Product: true
+            }
+          },
           sub_category: true,
           bundleParentProduct: {
             select: {
@@ -158,17 +165,19 @@ export class Product {
     }
   }
 
-  async updateProductsStocks(products: {id: number, quantity: number}[]) {
+  async updateProductsStocks(products: {id: number, quantity: number, parentQuantity: number}[]) {
     try {
       products.forEach(async (p) => {
        await product.updateMany({
           where: {
             id: p.id,
-            productType: 'SINGLE'
+            productType: {
+              not: 'BUNDLE'
+            }
           },
           data: {
             stock: {
-              decrement: p.quantity
+              decrement: p.quantity * p.parentQuantity
             },
           },
         })

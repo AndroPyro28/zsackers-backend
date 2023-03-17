@@ -18,11 +18,12 @@ export class ValidateCheckoutMiddleware implements NestMiddleware {
             const arrayOfProductId = [];
 
             cartProductsList.forEach((cartProduct) => {
-              if(cartProduct.product.productType === 'BUNDLE') {
+              if(cartProduct?.Cart_Product_Variant.length > 0) {
                   cartProduct.Cart_Product_Variant.forEach((cartProductVariant) => {
                     arrayOfProductId.push(cartProductVariant.productId)
                   })
-              } else {
+              } 
+              if(cartProduct.product.productType !== 'BUNDLE') {
                     arrayOfProductId.push(cartProduct.productId)
               }
             })
@@ -32,20 +33,22 @@ export class ValidateCheckoutMiddleware implements NestMiddleware {
             for(let i = 0; i < cartProductsList.length; i++) {
                 if(cartProductsList[i].product.productType === 'SINGLE') {
                   const index = products.findIndex(product => product.id === cartProductsList[i].product.id);
-                  if(products[index].stock - cartProductsList[i].quantity < 0) {
+                  if(products[index]?.stock - cartProductsList[i].quantity < 0) {
                     throw new ForbiddenException('Out of stock')
                   } else {
                     products[index].stock = products[index].stock - cartProductsList[i].quantity;
                   }
                 }
 
-                if(cartProductsList[i].product.productType === 'BUNDLE') {
+                if(cartProductsList[i].Cart_Product_Variant.length > 0) {
+
                    cartProductsList[i].Cart_Product_Variant.forEach(variant => {
                     const index = products.findIndex(product => product.id === variant.product.id);
-                    if(products[index].stock - variant.quantity * cartProductsList[i].quantity < 0) {
-                    throw new ForbiddenException('Out of stock')
+                    if(products[index]?.stock - variant.quantity * cartProductsList[i].quantity < 0) {
+                    throw new ForbiddenException('Add ons is out of stock please decrease your product quantity')
                   } else {
-                      products[index].stock = products[index].stock - variant.quantity * cartProductsList[i].quantity
+                    console.log( 'last',  products[index]?.stock)
+                      products[index].stock = products[index]?.stock - variant.quantity * cartProductsList[i].quantity
                     }
                   })
                 }

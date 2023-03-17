@@ -14,9 +14,17 @@ export class CartProduct {
           id: true,
           quantity: true,
           product: true,
+          Cart_Product_Variant: {
+            select: {
+              id: true,
+              product: true,
+              quantity: true
+            }
+          }
         },
       });
 
+      console.log('hitted get cart products by user')
       return cartProducts;
     } catch (error) {
       console.error(error);
