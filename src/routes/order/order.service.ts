@@ -108,9 +108,9 @@ export class OrderService {
     })
     const productIdsToUpdate = [...productIds1, ...productIds2]
 
-    this.productModel.updateProductsStocks(productIdsToUpdate)
+    await this.productModel.updateProductsStocks(productIdsToUpdate)
 
-    this.cartProductModel.updateManyCartProductsWithOrder(cartProductIds, newOrderDetails?.id)
+    await this.cartProductModel.updateManyCartProductsWithOrder(cartProductIds, newOrderDetails?.id)
     return {
       success: true
     }
@@ -147,8 +147,8 @@ export class OrderService {
     })
     const productIdsToUpdate = [...productIds1, ...productIds2]
 
-    this.productModel.updateProductsStocks(productIdsToUpdate)
-    this.cartProductModel.updateManyCartProductsWithOrder(cartProductIds,newOrderDetails.id)
+    await this.productModel.updateProductsStocks(productIdsToUpdate)
+    await this.cartProductModel.updateManyCartProductsWithOrder(cartProductIds,newOrderDetails.id)
     return {
       success: true
     }
