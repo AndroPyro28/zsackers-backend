@@ -39,7 +39,7 @@ model User {
   order_details     Order_Details[]
   Cart_Product      Cart_Product[]
   status            statuses        @default(ACTIVE)
-
+  super_admin       Boolean?        @default(false)
   @@map("users")
 }
 

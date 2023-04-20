@@ -46,7 +46,6 @@ export class AuthService {
 
     async forgotPassword(email: string) {
         const user = await this.userModel.findUserByEmail(email);
-        console.log(user)
         if(!user) throw new ForbiddenException('Invalid Credentials');
 
         const password_reset_code = randomize('aA0', 8);
