@@ -390,4 +390,23 @@ export class OrderDetails {
       console.error(error);
     }
   }
+
+  async getAllOrdersByYear() {
+    try {
+      console.log(new Date(new Date().getFullYear().toString()))
+      const orders = await order_Details.findMany({
+        where: {
+          createdAt: {
+            gte: new Date(new Date().getFullYear().toString())
+          }
+        },
+        orderBy: {
+          createdAt: 'asc'
+        }
+      });
+      return orders;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }

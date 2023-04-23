@@ -11,3 +11,4 @@ import { ReportModule } from './routes/report/report.module';
   imports: [AuthModule, CategoryModule, SubcategoryModule, ProductModule, CartProductModule, StaffModule, OrderModule, UserModule, ReportModule],
 })
 export class AppModule {}
+

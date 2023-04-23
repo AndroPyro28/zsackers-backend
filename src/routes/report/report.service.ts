@@ -30,29 +30,11 @@ export class ReportService {
     }
     const weeklySales = await this.orderDetailsModel.getAllOrdersByWeekdays(weekdays)
 
-    // weeklySales.reduce((weekdays, order) => {
-    //   const date = new Date(orders.createdAt)?.toISOString().slice(0, 10)
-    //   if( orders.order_status === 'completed') {
-    //     // weekdays[date].totalSales > 0 ? weekdays[date].totalSales.
-
-    //   weekdays[date]?.totalSales = !weekdays[date]?.totalSales ? order.totalAmount : 
-
-    //   }
-    // }, [])
 
     const separatedData = weeklySales.reduce((acc, order) => {
       const date = new Date(order.createdAt)?.toISOString().slice(0, 10);
       
       if (!acc[date]) {
-        console.log('!acc')
-        if(order.order_status === 'completed' || order.order_status === 'pending' || order.order_status === 'onGoing') {
-          acc[date] = {
-            totalSales: order.totalAmount,
-            totalCancelled: 0,
-            totalTransaction: 1,
-            totalSuccess: 1
-          };
-        }
 
         if(order.order_status === 'cancelled') {
           acc[date] = {
@@ -61,11 +43,24 @@ export class ReportService {
             totalTransaction: 1,
             totalSuccess: 0
           };
+        } else {
+          acc[date] = {
+            totalSales: order.totalAmount,
+            totalCancelled: 0,
+            totalTransaction: 1,
+            totalSuccess: 1
+          };
         }
       }
 
       else {
-        if(order.order_status === 'completed' || order.order_status === 'pending' || order.order_status === 'onGoing') {
+        if(order.order_status === 'cancelled') {
+          acc[date] = {
+            ...acc[date],
+            totalTransaction: acc[date].totalTransaction + 1,
+            totalCancelled: acc[date].totalCancelled + 1
+          };
+        } else {
           acc[date] = {
             ...acc[date],
             totalSales: acc[date].totalSales + order.totalAmount,
@@ -73,18 +68,116 @@ export class ReportService {
             totalSuccess: acc[date].totalSuccess + 1
           };
         }
-
-        if(order.order_status === 'cancelled') {
-          acc[date] = {
-            ...acc[date],
-            totalTransaction: acc[date].totalTransaction + 1,
-            totalCancelled: acc[date].totalCancelled + 1
-          };
-        }
       }
       return acc;
     }, {});
-    // console.log(separatedData)
     return separatedData;
   }
+
+ 
+  async generateReportByYear() {
+
+    const monthly = [
+      {
+        totalTransaction: 0,
+        totalCancelled: 0,
+        totalSuccess: 0,
+        totalSales: 0,
+        month: 0
+      },
+      {
+        totalTransaction: 0,
+        totalCancelled: 0,
+        totalSuccess: 0,
+        totalSales: 0,
+        month: 1
+      },
+      {
+        totalTransaction: 0,
+        totalCancelled: 0,
+        totalSuccess: 0,
+        totalSales: 0,
+        month: 2
+      },
+      {
+        totalTransaction: 0,
+        totalCancelled: 0,
+        totalSuccess: 0,
+        totalSales: 0,
+        month: 3
+      },
+      {
+        totalTransaction: 0,
+        totalCancelled: 0,
+        totalSuccess: 0,
+        totalSales: 0,
+        month: 4
+      },
+      {
+        totalTransaction: 0,
+        totalCancelled: 0,
+        totalSuccess: 0,
+        totalSales: 0,
+        month: 5
+      },
+      {
+        totalTransaction: 0,
+        totalCancelled: 0,
+        totalSuccess: 0,
+        totalSales: 0,
+        month: 6
+      },
+      {
+        totalTransaction: 0,
+        totalCancelled: 0,
+        totalSuccess: 0,
+        totalSales: 0,
+        month: 7
+      },
+      {
+        totalTransaction: 0,
+        totalCancelled: 0,
+        totalSuccess: 0,
+        totalSales: 0,
+        month: 8
+      },
+      {
+        totalTransaction: 0,
+        totalCancelled: 0,
+        totalSuccess: 0,
+        totalSales: 0,
+        month: 9
+      },
+      {
+        totalTransaction: 0,
+        totalCancelled: 0,
+        totalSuccess: 0,
+        totalSales: 0,
+        month: 10
+      },
+      {
+        totalTransaction: 0,
+        totalCancelled: 0,
+        totalSuccess: 0,
+        totalSales: 0,
+        month: 11
+      }
+    ]
+
+    const allOrders = await this.orderDetailsModel.getAllOrdersByYear();
+
+    allOrders.forEach((order) => {
+      if(order.order_status === 'cancelled') {
+        monthly[order.createdAt.getMonth()].totalCancelled += 1
+        monthly[order.createdAt.getMonth()].totalTransaction += 1
+      } else {
+        monthly[order.createdAt.getMonth()].totalSales += order.totalAmount
+        monthly[order.createdAt.getMonth()].totalTransaction += 1
+        monthly[order.createdAt.getMonth()].totalSuccess += 1
+      }
+    })
+
+    return monthly
+  }
+
 }

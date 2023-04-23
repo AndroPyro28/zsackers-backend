@@ -176,7 +176,7 @@ export class OrderService {
   }
 
   async summary( yearSelected: number ) {
-    const orders = await this.orderDetailsModel.findAllOrders();
+    const orders = await this.orderDetailsModel.getAllOrdersByYear();
     const monthlyCancelledTransactions = [
       {
         month: 0,
@@ -383,48 +383,60 @@ export class OrderService {
 
     const yearNow = new Date().getFullYear();
 
-    const totalSalesToday = orders?.reduce((total ,order) => {
-      const orderDate = new Date(order.createdAt)?.toISOString().slice(0, 10);
-      const todayDate = new Date()?.toISOString().slice(0, 10);
+    // const totalSalesToday = orders?.reduce((total ,order) => {
+    //   const orderDate = new Date(order.createdAt)?.toISOString().slice(0, 10);
+    //   const todayDate = new Date()?.toISOString().slice(0, 10);
 
-      if(orderDate  === todayDate && order.order_status !== 'cancelled') {
-        return total + order.totalAmount
-      }
+    //   if(orderDate  === todayDate && order.order_status !== 'cancelled') {
+    //     return total + order.totalAmount
+    //   }
 
-      return total;
-    }, 0)
-
+    //   return total;
+    // }, 0)
+    let totalSalesToday = 0
     orders.forEach((order) => {
       const month = new Date(order.createdAt).getMonth();
       const year = new Date(order.createdAt).getFullYear();
       if (year === yearSelected && order.order_status === 'cancelled') {
         monthlyCancelledTransactions[month].total++;
-      }
-    });
-
-    orders.forEach((order) => {
-      const month = new Date(order.createdAt).getMonth();
-      const year = new Date(order.createdAt).getFullYear();
-      if (year === yearSelected && order.order_status === 'completed') {
-        monthlySuccessTransactions[month].total++;
-      }
-    });
-
-    orders.forEach((order) => {
-      const month = new Date(order.createdAt).getMonth();
-      const year = new Date(order.createdAt).getFullYear();
-      if (year === yearSelected) {
         monthlyTotalTransactions[month].total++;
+      } else {
+        const orderDate = new Date(order.createdAt)?.toISOString().slice(0, 10);
+        const todayDate = new Date()?.toISOString().slice(0, 10);
+
+        if(orderDate  === todayDate) {
+          totalSalesToday += order.totalAmount
+        }
+
+        monthlySuccessTransactions[month].total++;
+        monthlyTotalTransactions[month].total++;
+        monthlySales[month].total += order?.totalAmount;
+        
       }
     });
 
-    orders.forEach((order) => {
-      const month = new Date(order.createdAt).getMonth();
-      const year = new Date(order.createdAt).getFullYear();
-      if (year === yearSelected && order?.order_status != 'cancelled') {
-        monthlySales[month].total += order?.totalAmount;
-      }
-    });
+    // orders.forEach((order) => {
+    //   const month = new Date(order.createdAt).getMonth();
+    //   const year = new Date(order.createdAt).getFullYear();
+    //   if (year === yearSelected && order.order_status === 'completed') {
+        
+    //   }
+    // });
+
+    // orders.forEach((order) => {
+    //   const month = new Date(order.createdAt).getMonth();
+    //   const year = new Date(order.createdAt).getFullYear();
+    //   if (year === yearSelected) {
+    //   }
+    // });
+
+    // orders.forEach((order) => {
+    //   const month = new Date(order.createdAt).getMonth();
+    //   const year = new Date(order.createdAt).getFullYear();
+    //   if (year === yearSelected && order?.order_status != 'cancelled') {
+    //     monthlySales[month].total += order?.totalAmount;
+    //   }
+    // });
 
 
     return {

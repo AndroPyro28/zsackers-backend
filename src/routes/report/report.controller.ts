@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ReportService } from './report.service';
 import { CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
-import { Public } from 'src/common/decorators';
+import { Public, Roles } from 'src/common/decorators';
 
 @Controller('report')
 export class ReportController {
@@ -12,10 +12,16 @@ export class ReportController {
   // create(@Body() createReportDto: CreateReportDto) {
   //   return this.reportService.create(createReportDto);
   // }
-  @Public()
+  @Roles(['ADMIN'])
   @Get('weekly')
   generateReportByWeek() {
     return this.reportService.generateReportByWeek();
+  }
+
+  @Roles(['ADMIN'])
+  @Get('yearly')
+  generateReportByYear() {
+    return this.reportService.generateReportByYear();
   }
 
   // @Get(':id')
