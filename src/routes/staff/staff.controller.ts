@@ -2,14 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe 
 import { StaffService } from './staff.service';
 import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
-import { Public } from 'src/common/decorators';
+import { Public, Roles } from 'src/common/decorators';
 
 @Controller('staff')
 export class StaffController {
   constructor(private readonly staffService: StaffService) {}
 
   @Post()
-  @Public()
+  @Roles(['ADMIN'])
   async create(@Body() createStaffDto: CreateStaffDto) {
     return this.staffService.create(createStaffDto);
   }
@@ -21,16 +21,18 @@ export class StaffController {
     return this.staffService.findAll();
   }
 
+  @Roles(['ADMIN'])
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.staffService.findOne(+id);
   }
 
+  @Roles(['ADMIN'])
   @Patch(':id')
   async update(@Param('id') id: string, @Body('status') status: "INACTIVE" | "ACTIVE") {
     return this.staffService.update(+id, status);
   }
-
+  @Roles(['ADMIN'])
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
     return this.staffService.remove(+id);

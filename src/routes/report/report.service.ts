@@ -51,6 +51,21 @@ export class ReportService {
             totalSuccess: 1
           };
         }
+
+        if(order.transaction_type === 'ONLINE') {
+          acc[date] = {
+            ...acc[date],
+            onlineTransaction: 1,
+            walkinTransaction: 0
+          };
+        } else{
+          acc[date] = {
+            ...acc[date],
+            onlineTransaction: 0,
+            walkinTransaction: 1
+          };
+        } 
+        
       }
 
       else {
@@ -68,6 +83,18 @@ export class ReportService {
             totalSuccess: acc[date].totalSuccess + 1
           };
         }
+
+        if(order.transaction_type === 'ONLINE') {
+          acc[date] = {
+            ...acc[date],
+            onlineTransaction: acc[date].onlineTransaction + 1,
+          };
+        } else{
+          acc[date] = {
+            ...acc[date],
+            walkinTransaction: acc[date].walkinTransaction + 1,
+          };
+        } 
       }
       return acc;
     }, {});
@@ -83,6 +110,8 @@ export class ReportService {
         totalCancelled: 0,
         totalSuccess: 0,
         totalSales: 0,
+        onlineTransaction: 0,
+        walkinTransaction: 0,
         month: 0
       },
       {
@@ -90,6 +119,8 @@ export class ReportService {
         totalCancelled: 0,
         totalSuccess: 0,
         totalSales: 0,
+        onlineTransaction: 0,
+        walkinTransaction: 0,
         month: 1
       },
       {
@@ -97,6 +128,8 @@ export class ReportService {
         totalCancelled: 0,
         totalSuccess: 0,
         totalSales: 0,
+        onlineTransaction: 0,
+        walkinTransaction: 0,
         month: 2
       },
       {
@@ -104,6 +137,8 @@ export class ReportService {
         totalCancelled: 0,
         totalSuccess: 0,
         totalSales: 0,
+        onlineTransaction: 0,
+        walkinTransaction: 0,
         month: 3
       },
       {
@@ -111,6 +146,8 @@ export class ReportService {
         totalCancelled: 0,
         totalSuccess: 0,
         totalSales: 0,
+        onlineTransaction: 0,
+        walkinTransaction: 0,
         month: 4
       },
       {
@@ -118,6 +155,8 @@ export class ReportService {
         totalCancelled: 0,
         totalSuccess: 0,
         totalSales: 0,
+        onlineTransaction: 0,
+        walkinTransaction: 0,
         month: 5
       },
       {
@@ -125,6 +164,8 @@ export class ReportService {
         totalCancelled: 0,
         totalSuccess: 0,
         totalSales: 0,
+        onlineTransaction: 0,
+        walkinTransaction: 0,
         month: 6
       },
       {
@@ -132,6 +173,8 @@ export class ReportService {
         totalCancelled: 0,
         totalSuccess: 0,
         totalSales: 0,
+        onlineTransaction: 0,
+        walkinTransaction: 0,
         month: 7
       },
       {
@@ -139,6 +182,8 @@ export class ReportService {
         totalCancelled: 0,
         totalSuccess: 0,
         totalSales: 0,
+        onlineTransaction: 0,
+        walkinTransaction: 0,
         month: 8
       },
       {
@@ -146,6 +191,8 @@ export class ReportService {
         totalCancelled: 0,
         totalSuccess: 0,
         totalSales: 0,
+        onlineTransaction: 0,
+        walkinTransaction: 0,
         month: 9
       },
       {
@@ -153,6 +200,8 @@ export class ReportService {
         totalCancelled: 0,
         totalSuccess: 0,
         totalSales: 0,
+        onlineTransaction: 0,
+        walkinTransaction: 0,
         month: 10
       },
       {
@@ -160,6 +209,8 @@ export class ReportService {
         totalCancelled: 0,
         totalSuccess: 0,
         totalSales: 0,
+        onlineTransaction: 0,
+        walkinTransaction: 0,
         month: 11
       }
     ]
@@ -175,9 +226,47 @@ export class ReportService {
         monthly[order.createdAt.getMonth()].totalTransaction += 1
         monthly[order.createdAt.getMonth()].totalSuccess += 1
       }
+
+      if(order.transaction_type === 'ONLINE') {
+        monthly[order.createdAt.getMonth()].onlineTransaction += 1
+      } else {
+        monthly[order.createdAt.getMonth()].walkinTransaction += 1
+      }
     })
 
     return monthly
+  }
+
+
+  async generateReportByMonth () {
+    const orders = await this.orderDetailsModel.getAllOrdersByMonth();
+
+    const thisMonth = {
+      totalTransaction: 0,
+      totalCancelled: 0,
+      totalSuccess: 0,
+      totalSales: 0,
+      onlineTransaction: 0,
+      walkinTransaction: 0,
+    }
+
+    orders.forEach((order) => {
+      if(order.order_status === 'cancelled') {
+        thisMonth.totalCancelled += 1
+        thisMonth.totalTransaction += 1
+      } else {
+        thisMonth.totalSales += order.totalAmount
+        thisMonth.totalTransaction += 1
+        thisMonth.totalSuccess += 1
+      }
+
+      if(order.transaction_type === 'ONLINE') {
+        thisMonth.onlineTransaction += 1
+      } else {
+        thisMonth.walkinTransaction += 1
+      }
+    })
+    return thisMonth
   }
 
 }

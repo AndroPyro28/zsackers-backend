@@ -12,16 +12,22 @@ export class ReportController {
   // create(@Body() createReportDto: CreateReportDto) {
   //   return this.reportService.create(createReportDto);
   // }
-  @Roles(['ADMIN'])
+  @Roles(['ADMIN', 'STAFF'])
   @Get('weekly')
   generateReportByWeek() {
     return this.reportService.generateReportByWeek();
   }
 
-  @Roles(['ADMIN'])
+  @Roles(['ADMIN', 'STAFF'])
   @Get('yearly')
   generateReportByYear() {
     return this.reportService.generateReportByYear();
+  }
+
+  @Roles(['ADMIN', 'STAFF'])
+  @Get('monthly')
+  generateReportByMonth() {
+    return this.reportService.generateReportByMonth();
   }
 
   // @Get(':id')
