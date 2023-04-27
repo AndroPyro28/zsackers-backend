@@ -8,10 +8,6 @@ import { Public, Roles } from 'src/common/decorators';
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}
 
-  // @Post()
-  // create(@Body() createReportDto: CreateReportDto) {
-  //   return this.reportService.create(createReportDto);
-  // }
   @Roles(['ADMIN', 'STAFF'])
   @Get('weekly')
   generateReportByWeek() {
@@ -29,19 +25,4 @@ export class ReportController {
   generateReportByMonth() {
     return this.reportService.generateReportByMonth();
   }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.reportService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateReportDto: UpdateReportDto) {
-  //   return this.reportService.update(+id, updateReportDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.reportService.remove(+id);
-  // }
 }
