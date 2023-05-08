@@ -18,7 +18,7 @@ export class CartProductController {
         @Body() body: addTocartDto,
         @GetCurrentUser('id') userId: number
     ) {
-        return this.cartProduct.addToCart(body, userId, body.note);
+        return this.cartProduct.addToCart(body, userId);
     }
 
     @Get()

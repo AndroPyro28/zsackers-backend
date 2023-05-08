@@ -20,7 +20,7 @@ export class CartProductService {
     async addToCart(body: addTocartDto, userId: number) {
 
         const product = await this.productModel.getProductById(body.productId);
-        const newCartProduct = await this.cartProductModel.addToCart(body.productId, userId, body.note);
+        const newCartProduct = await this.cartProductModel.addToCart(body.productId, userId, body?.note);
 
         // if(product.productType === 'BUNDLE') {
             this.cartProductVariantsModel.createVariants(newCartProduct.id, body.bundleVariants)
