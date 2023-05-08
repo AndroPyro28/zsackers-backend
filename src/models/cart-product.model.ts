@@ -173,26 +173,10 @@ export class CartProduct {
                 quantity: {
                   increment: 1,
                 },
+                note
               },
             });
       }
-      // if (action === 'increment' && cartProduct.product.productType === 'SINGLE') {
-      //   return cartProduct.quantity + 1 > cartProduct.product.stock
-      //     ? new Error('Cannot exceed to product stock')
-      //     : await cart_Product.updateMany({
-      //         where: {
-      //           id: cartProductId,
-      //           userId,
-      //         },
-      //         data: {
-      //           quantity: {
-      //             increment: 1,
-      //           },
-      //         },
-      //       });
-      // }
-
-      
     } catch (error) {
       console.error(error);
     }
