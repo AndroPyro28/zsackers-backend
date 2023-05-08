@@ -17,10 +17,10 @@ export class CartProductService {
         ) {
     }
 
-    async addToCart(body: addTocartDto, userId: number) {
+    async addToCart(body: addTocartDto, userId: number, note?: string) {
 
         const product = await this.productModel.getProductById(body.productId);
-        const newCartProduct = await this.cartProductModel.addToCart(body.productId, userId);
+        const newCartProduct = await this.cartProductModel.addToCart(body.productId, userId, note);
 
         // if(product.productType === 'BUNDLE') {
             this.cartProductVariantsModel.createVariants(newCartProduct.id, body.bundleVariants)
@@ -36,8 +36,8 @@ export class CartProductService {
         return result;
     }
 
-    async updateCartQuantity(cartProductId: number, userId: number, action: string) {
-        const result = await this.cartProductModel.updateCartQuantity(cartProductId, userId, action);
+    async updateCartQuantity(cartProductId: number, userId: number, action: string, note?: string) {
+        const result = await this.cartProductModel.updateCartQuantity(cartProductId, userId, action, note);
         if(!result) throw new ForbiddenException('Something went wrong...')
         return result;
     }

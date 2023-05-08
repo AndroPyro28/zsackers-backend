@@ -87,7 +87,7 @@ export class CartProduct {
       console.error(error)
     }
   }
-  async addToCart(productId: number, userId: number) {
+  async addToCart(productId: number, userId: number, note?: string) {
     try {
       const isAlreadyInCart = await cart_Product.findFirst({
         where: {
@@ -104,6 +104,7 @@ export class CartProduct {
           data: {
             productId,
             userId,
+            note
           },
         });
         return addToCart;
@@ -116,6 +117,7 @@ export class CartProduct {
           quantity: {
             increment: 1,
           },
+          note
         },
       });
 
@@ -139,7 +141,7 @@ export class CartProduct {
     }
   }
 
-  async updateCartQuantity(cartProductId: number, userId: number, action: string) {
+  async updateCartQuantity(cartProductId: number, userId: number, action: string, note?: string) {
     try {
       const cartProduct = await this.getProductCartById(cartProductId);
       if (action === 'decrement') {
@@ -154,6 +156,7 @@ export class CartProduct {
                 quantity: {
                   decrement: 1,
                 },
+                note
               },
             });
       }

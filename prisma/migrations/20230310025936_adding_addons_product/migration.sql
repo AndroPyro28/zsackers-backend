@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `products` MODIFY `productType` ENUM('SINGLE', 'BUNDLE', 'ADDONS') NOT NULL DEFAULT 'SINGLE';

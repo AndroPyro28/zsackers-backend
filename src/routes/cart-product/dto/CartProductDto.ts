@@ -8,4 +8,7 @@ export class addTocartDto {
 
     @IsOptional()
     bundleVariants: {quantity: number, productId: number}[]
+
+    @IsOptional()
+    note: string
 }

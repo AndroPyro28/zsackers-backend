@@ -18,7 +18,7 @@ export class CartProductController {
         @Body() body: addTocartDto,
         @GetCurrentUser('id') userId: number
     ) {
-        return this.cartProduct.addToCart(body, userId);
+        return this.cartProduct.addToCart(body, userId, body.note);
     }
 
     @Get()
@@ -34,9 +34,10 @@ export class CartProductController {
     async updateCartQuantity(
             @GetCurrentUser('id', ParseIntPipe) userId: number,
             @Body('action') action: string,
-            @Param('id', ParseIntPipe) cartProductId: number
+            @Param('id', ParseIntPipe) cartProductId: number,
+            @Body('note') note: string
         ) {
-        return this.cartProduct.updateCartQuantity(cartProductId, userId, action);
+        return this.cartProduct.updateCartQuantity(cartProductId, userId, action, note);
     }
 
     @Delete(':id')
