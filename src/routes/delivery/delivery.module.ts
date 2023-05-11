@@ -9,6 +9,6 @@ import { Delivery } from 'src/models/delivery.model';
 
 @Module({
   controllers: [DeliveryController],
-  providers: [DeliveryService, Delivery, User, ArgonHelper, SMTP, Profile, RandomGenerator]
+  providers: [DeliveryService, User, ArgonHelper, SMTP, Profile, RandomGenerator]
 })
 export class DeliveryModule {}
