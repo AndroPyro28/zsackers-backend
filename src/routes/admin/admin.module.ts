@@ -8,6 +8,6 @@ import { SMTP } from 'src/common/utils';
 
 @Module({
   controllers: [AdminController],
-  providers: [AdminService, Admin,User, ArgonHelper, SMTP, Profile, RandomGenerator]
+  providers: [AdminService, Admin, User, ArgonHelper, SMTP, Profile, RandomGenerator]
 })
 export class AdminModule {}
