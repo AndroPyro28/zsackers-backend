@@ -7,9 +7,10 @@ import { OrderModule } from './routes/order/order.module';
 import { UserModule } from './routes/user/user.module';
 import { ReportModule } from './routes/report/report.module';
 import { AdminModule } from './routes/admin/admin.module';
+import { DeliveryModule } from './routes/delivery/delivery.module';
 
 @Module({
-  imports: [AuthModule, CategoryModule, SubcategoryModule, ProductModule, CartProductModule, StaffModule, OrderModule, UserModule, ReportModule, AdminModule],
+  imports: [AuthModule, CategoryModule, SubcategoryModule, ProductModule, CartProductModule, StaffModule, OrderModule, UserModule, ReportModule, AdminModule, DeliveryModule],
 })
 export class AppModule {}
 
