@@ -24,7 +24,7 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) { }
 
   @Post('/checkout')
-  @Roles(['ADMIN', 'CUSTOMER', 'STAFF'])
+  @Roles(['ADMIN', 'CUSTOMER', 'STAFF', 'DELIVERY'])
   async checkout(
     @Body() createOrderDto: CreateOrderDto,
     @GetCurrentUser() currentUser: UserInteface,
@@ -34,7 +34,7 @@ export class OrderController {
   }
 
   @Post('/pos')
-  @Roles(['ADMIN', 'CUSTOMER', 'STAFF'])
+  @Roles(['ADMIN', 'CUSTOMER', 'STAFF', 'DELIVERY'])
   async pos(
     @Body() createOrderDto: CreateOrderWalkinDto,
     @GetCurrentUser('id') userId: number,
@@ -43,7 +43,7 @@ export class OrderController {
   }
 
   @Post('/payment')
-  @Roles(['ADMIN', 'CUSTOMER', 'STAFF'])
+  @Roles(['ADMIN', 'CUSTOMER', 'STAFF', 'DELIVERY'])
   async payment(
     @Body() createOrderDto: CreateOrderDto,
     @GetCurrentUser('id') userId: number,
@@ -52,7 +52,7 @@ export class OrderController {
   }
 
   @Get('admin')
-  @Roles(['ADMIN', 'CUSTOMER', 'STAFF'])
+  @Roles(['ADMIN', 'CUSTOMER', 'STAFF', 'DELIVERY'])
   findAllByAdmin(
     @Query() queries: FindOrderAdmin
   ) {
@@ -60,7 +60,7 @@ export class OrderController {
   }
 
   @Get('completed-cancelledOrders')
-  @Roles(['ADMIN', 'CUSTOMER', 'STAFF'])
+  @Roles(['ADMIN', 'CUSTOMER', 'STAFF', 'DELIVERY'])
   findAllCompletedAndCancelledOrders(
     @Query('filterDateFrom') filterDateFrom : string,
     @Query('filterDateTo')filterDateTo : string
@@ -72,7 +72,7 @@ export class OrderController {
   }
 
   @Get('customer')
-  @Roles(['ADMIN', 'CUSTOMER', 'STAFF'])
+  @Roles(['ADMIN', 'CUSTOMER', 'STAFF', 'DELIVERY'])
   findAllByCustomer(
     @Query('status') status: string,
     @GetCurrentUser('id') userId: number
@@ -81,7 +81,7 @@ export class OrderController {
   }
 
   @Get('order-id/:order_id')
-  @Roles(['ADMIN', 'CUSTOMER', 'STAFF'])
+  @Roles(['ADMIN', 'CUSTOMER', 'STAFF', 'DELIVERY'])
   findOneByOrderId(
     @Param('order_id') order_id: string,
   ) {
@@ -89,26 +89,26 @@ export class OrderController {
   }
 
   @Get('summary/:year')
-  @Roles(['ADMIN', 'CUSTOMER', 'STAFF'])
+  @Roles(['ADMIN', 'CUSTOMER', 'STAFF', 'DELIVERY'])
   summary(@Param('year', ParseIntPipe) year: number) {
     return this.orderService.summary(year);
   }
 
   @Get(':id')
-  @Roles(['ADMIN', 'STAFF', 'CUSTOMER'])
+  @Roles(['ADMIN', 'STAFF', 'CUSTOMER', 'DELIVERY'])
   findOneById(@Param('id') id: string) {
     return this.orderService.findOne(+id);
   }
 
   @Patch(':id')
-  @Roles(['ADMIN', 'CUSTOMER', 'STAFF'])
+  @Roles(['ADMIN', 'CUSTOMER', 'STAFF', 'DELIVERY'])
   updateStatus(
     @Param('id', ParseIntPipe) id: number, @Body('deliveryStatus', ParseIntPipe) deliveryStatus: number) {
     return this.orderService.updateStatus(id, deliveryStatus);
   }
 
   @Patch('cancel/:id')
-  @Roles(['ADMIN', 'STAFF', 'CUSTOMER'])
+  @Roles(['ADMIN', 'STAFF', 'CUSTOMER', 'DELIVERY'])
   cancelOrder(
     @Param('id', ParseIntPipe) id: number,
     @Body() cancelOrderDto: CancelOrderDto

@@ -26,7 +26,7 @@ export class AuthController {
     }
 
     @Get('me')
-    @Roles(['ADMIN', 'CUSTOMER', 'STAFF'])
+    @Roles(['ADMIN', 'CUSTOMER', 'STAFF', 'DELIVERY'])
     @HttpCode(HttpStatus.OK)
     async authMe(@GetCurrentUser() currentUser: UserInteface) {
         delete currentUser.password
