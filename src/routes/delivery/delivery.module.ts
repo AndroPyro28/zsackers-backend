@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { DeliveryService } from './delivery.service';
 import { DeliveryController } from './delivery.controller';
-import { User } from '../user/entities/user.entity';
+import { User } from '../../models';
 import { ArgonHelper, RandomGenerator } from 'src/common/helpers';
 import { SMTP } from 'src/common/utils';
 import { Profile } from 'src/models';
