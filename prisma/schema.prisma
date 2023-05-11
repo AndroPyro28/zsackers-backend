@@ -13,6 +13,7 @@ enum ROLE {
   ADMIN
   CUSTOMER
   STAFF
+  DELIVERY
 }
 
 enum statuses {
